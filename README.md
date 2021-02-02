@@ -1,1 +1,1 @@
-e-commerce
+Site de e-commerce basé sur le django. 
