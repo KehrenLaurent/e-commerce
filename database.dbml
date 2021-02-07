@@ -1,0 +1,131 @@
+Project project_name {
+  database_type: 'MySQL'
+  Note: 'Site de e-commerce'
+}
+
+Table produit{
+  id int [pk, increment]
+  nom varchar
+  description_court varchar
+  description_longue varchar
+  prix float
+}
+
+Table categorie{
+  id int [pk, increment]
+  idProduit int
+  nom varchar
+  description varchar
+}
+
+Ref: produit.id > categorie.idProduit
+
+Table sous_categorie{
+  id int [pk, increment]
+  idCategorie int
+  nom varchar
+  description varchar
+}
+
+Ref: categorie.id > sous_categorie.idCategorie
+
+Enum genre{
+  "Mme"
+  "M"
+}
+
+Table fournisseur{
+  id int [pk, increment]
+  idProduit int
+  societe varchar
+  genre genre
+  nom varchar
+  prenom varchar
+  adresse varchar
+  code_postal varchar
+  ville varchar
+  pays varchar
+  telephone varchar
+  mobile varchar
+  fax varchar
+  email varchar
+}
+
+Ref: produit.id > fournisseur.idProduit
+
+Table vat {
+  id int [pk, increment]
+  idProduit int
+  taux float
+}
+
+Ref: produit.id > vat.idProduit
+
+Table image {
+  id int [pk, increment]
+  idProduit int
+  photo blob
+}
+
+Ref: produit.id > image.idProduit
+
+Table detail_commande {
+  id int [pk, increment]
+  idProduit int
+  idCommande int
+  idFournisseur int
+  quantite int
+}
+
+Ref: produit.id > detail_commande.idProduit
+Ref: commande.id > detail_commande.idCommande
+Ref: fournisseur.id > detail_commande.idFournisseur
+
+Enum commande_statut{
+  "En attente de validation"
+  "Payée"
+  "Expédiée"
+  "Annulée"
+}
+
+Table commande{
+  id int [pk, increment]
+  idClient int
+  idAdresse int
+  date_commande datetime
+  date_envoi datetime
+  statut commande_statut 
+  prix float
+}
+
+Ref: client.id > commande.idClient
+Ref: adresse.id > commande.idAdresse
+
+Table adresse {
+  id int [pk, increment]
+  idClient int
+  genre genre
+  nom varchar
+  prenom varchar
+  societe varchar
+  adresse varchar
+  complement_adresse varchar
+  pays varchar
+  code_postal varchar
+  ville varchar
+  telephone varchar
+  mobile varchar
+  fax varchar
+}
+
+Ref: client.id > adresse.idClient
+
+Table client {
+  id int [pk]
+}
+
+Table user {
+  id int [pk, increment]
+}
+
+Ref: user.id > client.id
