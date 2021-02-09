@@ -6,6 +6,7 @@ Project project_name {
 Table produit{
   id int [pk, increment]
   nom varchar
+  reference varchar
   description_court varchar
   description_longue varchar
   prix float
