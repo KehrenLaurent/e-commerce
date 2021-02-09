@@ -9,6 +9,8 @@ Table produit{
   description_court varchar
   description_longue varchar
   prix float
+  date_creation datetime
+  date_modification datetime
 }
 
 Table categorie{
@@ -49,6 +51,8 @@ Table fournisseur{
   mobile varchar
   fax varchar
   email varchar
+  date_creation datetime
+  date_modification datetime
 }
 
 Ref: produit.id > fournisseur.idProduit
