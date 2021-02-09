@@ -12,6 +12,7 @@ Table produit{
   prix float
   date_creation datetime
   date_modification datetime
+  actif boolean
 }
 
 Table categorie{
