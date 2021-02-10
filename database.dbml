@@ -9,6 +9,7 @@ Table produit{
   reference varchar
   description_court varchar
   description_longue varchar
+  idCategorie int
   prix float
   date_creation datetime
   date_modification datetime
@@ -17,12 +18,11 @@ Table produit{
 
 Table categorie{
   id int [pk, increment]
-  idProduit int
   nom varchar
   description varchar
 }
 
-Ref: produit.id > categorie.idProduit
+Ref: categorie.id > produit.idCategorie
 
 Table sous_categorie{
   id int [pk, increment]
@@ -32,6 +32,15 @@ Table sous_categorie{
 }
 
 Ref: categorie.id > sous_categorie.idCategorie
+
+Table materiel_sous_categorie{
+  id int [pk, increment]
+  idProduit int
+  idSousCategorie int
+}
+
+Ref: materiel_sous_categorie.idSousCategorie > sous_categorie.id
+Ref: materiel_sous_categorie.idProduit > produit.id
 
 Enum genre{
   "Mme"
