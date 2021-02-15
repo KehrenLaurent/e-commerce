@@ -23,8 +23,8 @@ class Categorie(CategorieBase):
 
 
 class SousCategorie(CategorieBase):
-    categories = models.ForeignKey(
-        Categorie, related_name="sous_categorie", on_delete=models.SET_NULL)
+    categorie = models.ForeignKey(
+        Categorie, related_name="sous_categories", on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'Sous catégorie'
@@ -46,9 +46,9 @@ class Produit(models.Model):
         max_length=250, verbose_name="Description courte")
     description_longue = models.TextField(verbose_name='Description longue')
     categorie = models.ForeignKey(
-        Categorie, related_name="produits", on_delete=models.SET_NULL)
+        Categorie, related_name="produits", on_delete=models.SET_NULL, null=True)
     sous_categorie = models.ManyToManyField(
-        SousCategorie, related_name="produits", on_delete=models.CASCADE)
+        SousCategorie, related_name="produits")
     prix = models.DecimalField(
         verbose_name="Prix HT du produit", max_digits=10, decimal_places=2)
     date_creation = models.DateTimeField(
@@ -88,7 +88,7 @@ class Client(models.Model):
         return self.user
 
 
-class Adresse(models.ForeignKey):
+class Adresse(models.Model):
     """
     Une adresse est liée au client pour la facturation ou la livraison
     """
@@ -136,9 +136,9 @@ class Commande(models.Model):
         (ANNULEE, "annulée")
     )
     client = models.ForeignKey(
-        Client, verbose_name='commandes', on_delete=models.CASCADE)
+        'Client', verbose_name='commandes', on_delete=models.CASCADE)
     adresse = models.ForeignKey(
-        Adresse, related_name='commandes', on_delete=models.CASCADE)
+        'Adresse', related_name='commandes', on_delete=models.CASCADE)
     date_commande = models.DateTimeField(
         verbose_name="Date de commande", auto_now_add=True)
     date_envoi = models.DateTimeField(verbose_name="Date de l'envoi", )
@@ -153,7 +153,7 @@ class DetailCommande(models.Model):
     produit = models.ForeignKey(Produit, on_delete=models.CASCADE)
     commande = models.ForeignKey(Commande, on_delete=models.CASCADE)
     quantite = models.IntegerField(verbose_name="Quantité", default=1)
-    fournisseur = models.ForeignKey(Fournisseur, on_delete=models.SET_NULL)
+    fournisseur = models.ForeignKey(Fournisseur, on_delete=models.CASCADE)
 
     def __str__(self):
         return "Commande {}, produit {}".format(self.commande, self.produit)
