@@ -1,44 +1,46 @@
 from django.test import TestCase
-from ..models import Category, Product
+
+from ..models import Categorie, Produit, SousCategorie
 
 # Create your tests here.
 
 
-class CategoryTestCase(TestCase):
-    def setUp(self):
-        self.film = Category.objects.create(name='Film', slug='film')
-        self.chanson_francais = Category.objects.create(
-            name='Chanson français', slug='chanson-français')
-
-    def test_category_init(self):
-        self.assertEqual(self.chanson_francais.name, 'Chanson français')
-        self.assertEqual(self.chanson_francais.slug, 'chanson-français')
-
-    def test_str(self):
-        self.assertEqual(self.chanson_francais.name,
-                         str(self.chanson_francais))
-
-
 class ProductTestCase(TestCase):
-    def setUp(self):
-        self.film = Category.objects.create(name='Film', slug='film')
-        self.chanson_francais = Category.objects.create(
-            name='Chanson français', slug='chanson-français')
 
-        self.les_visiteurs = Product.objects.create(
-            category=self.film,
-            name='Les visiteurs',
-            slug='les-visiteurs',
-            description='Un film qui parle de chevaliers qui voyage dans le temps',
-            price=15.99,
-            available=True
+    @classmethod
+    def setUpTestData(cls):
+
+        cat1 = Categorie.objects.create(
+            nom='Voiture',
+            description='Voiture pour le grand public'
         )
 
-    def test_product_init(self):
-        self.assertEqual(self.les_visiteurs.category, self.film)
-        self.assertEqual(self.les_visiteurs.name, 'Les visiteurs')
-        self.assertEqual(self.les_visiteurs.slug, 'les-visiteurs')
-        self.assertEqual(self.les_visiteurs.description,
-                         'Un film qui parle de chevaliers qui voyage dans le temps')
-        self.assertEqual(self.les_visiteurs.price, 15.99)
-        self.assertEqual(self.les_visiteurs.available, True)
+        ssCat1 = SousCategorie.objects.create(
+            nom="Citadine",
+            description="Petite voiture consu pour la ville",
+            categorie=cat1
+        )
+
+        ssCat2 = SousCategorie.objects.create(
+            nom="Monospace",
+            description="Voiture permettant le transport de beaucoup de personne",
+            categorie=cat1
+        )
+
+        prod = Produit.objects.create(
+            nom='205',
+            reference='Peugeot',
+            description_court="Une petite citadine",
+            description_longue="Une super petite citadine avec 4 places",
+            categorie=cat1,
+            prix=15000,
+            actif=True,
+        )
+
+        prod.sous_categorie.add(ssCat1)
+
+    def test_nom_label(self):
+        produit = Produit.objects.first()
+        field_nom = produit._meta.get_field('nom')
+        self.assertEqual(field_nom.verbose_name, "Nom du produit")
+        self.assertEqual(field_nom.max_length, 150)
