@@ -32,6 +32,12 @@ class SousCategorie(CategorieBase):
 
 
 # Class du projet
+class Image(models.Model):
+    produit = models.ForeignKey(
+        'Produit', verbose_name='images', on_delete=models.CASCADE)
+    photo = models.ImageField(upload_to='shop/media')
+
+
 class Produit(models.Model):
     nom = models.CharField(max_length=150, verbose_name="Nom du produit")
     reference = models.CharField(
@@ -50,6 +56,8 @@ class Produit(models.Model):
     date_modification = models.DateTimeField(
         verbose_name="Date de modification", auto_now=True)
     actif = models.BooleanField(verbose_name="Produit actif", default=False)
+    miniature = models.FileField(
+        upload_to="shop/media", null=True, verbose_name="Miniature du produit")
 
     class Meta:
         verbose_name = 'Produit'
@@ -65,12 +73,12 @@ class Client(models.Model):
     Un client est une personne inscrite sur le site dans le but de faire une commande
     """
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    adresse_envoi_defaut = models.ForeignKey(Adresse,
+    adresse_envoi_defaut = models.ForeignKey("Adresse",
                                              related_name="adresse_envoi_defaut",
                                              null=True,
                                              verbose_name="Adresse de livraison par défaut",
                                              on_delete=models.SET_NULL)
-    adresse_facturation_defaut = models.ForeignKey(Adresse,
+    adresse_facturation_defaut = models.ForeignKey("Adresse",
                                                    related_name="adresse_facturation_defaut",
                                                    null=True,
                                                    verbose_name="Adresse de facturation par défaut",
