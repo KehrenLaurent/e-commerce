@@ -42,7 +42,7 @@ class Produit(models.Model):
     nom = models.CharField(max_length=150, verbose_name="Nom du produit")
     reference = models.CharField(
         max_length=150, verbose_name="Référence du produit")
-    description_court = models.CharField(
+    description_courte = models.CharField(
         max_length=250, verbose_name="Description courte")
     description_longue = models.TextField(verbose_name='Description longue')
     categorie = models.ForeignKey(
